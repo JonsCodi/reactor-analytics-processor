@@ -1,2 +1,3 @@
 service:
-  home-path: c:\\Users\\Jonas\\data\\in\\
+  home-path-in: c:\\Users\\Jonas\\data\\in\\
+  home-path-out: c:\\Users\\Jonas\\data\\out\\
