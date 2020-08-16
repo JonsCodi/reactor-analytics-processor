@@ -1,6 +1,6 @@
 package com.analytics.processor.config;
 
-import com.analytics.processor.listener.CustomDirectoryChangeLister;
+import com.analytics.processor.listener.CustomDirectoryChangeListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
@@ -22,7 +22,7 @@ public class FileWatcherConfig {
     public FileSystemWatcher fileSystemWatcher() {
         FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(3000L), Duration.ofMillis(1000L));
         fileSystemWatcher.addSourceDirectory(new File(homePathProperties.getHomePathIn()));
-        fileSystemWatcher.addListener(new CustomDirectoryChangeLister());
+        fileSystemWatcher.addListener(new CustomDirectoryChangeListener());
         fileSystemWatcher.start();
 
         log.info("FileWatcher - Started");

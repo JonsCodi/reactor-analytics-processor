@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class CustomDirectoryChangeLister implements FileChangeListener {
+public class CustomDirectoryChangeListener implements FileChangeListener {
 
     @Override
     public void onChange(Set<ChangedFiles> changeSet) {
