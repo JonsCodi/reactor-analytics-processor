@@ -13,7 +13,7 @@ public class HomePathProperties {
     @Value("${service.home-path-in}")
     private String homePathIn;
 
-    @Value("${service.home-path-out")
+    @Value("${service.home-path-out}")
     private String homePathOut;
 
 }
