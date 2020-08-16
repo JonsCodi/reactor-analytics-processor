@@ -1,6 +1,6 @@
 package com.analytics.processor.listener;
 
-import com.analytics.processor.service.IFileChangeService;
+import com.analytics.processor.service.IFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.devtools.filewatch.ChangedFile;
@@ -12,13 +12,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class CustomDirectoryChangeListener implements FileChangeListener {
 
-    private final IFileChangeService fileChangeService;
+    private final IFileService fileChangeService;
 
     @Override
     public void onChange(Set<ChangedFiles> changeSet) {
@@ -32,7 +33,10 @@ public class CustomDirectoryChangeListener implements FileChangeListener {
             Set<ChangedFile> setChangedFile = optionalChangedFiles.get();
             List<File> files = fileChangeService.getRecentAddedFiles(setChangedFile);
 
-            files.forEach(file -> log.info(file.getName()));
+            List<String> filesString = files.stream()
+                    .map(fileChangeService::fileToString)
+                    .collect(Collectors.toList());
+
         }
     }
 

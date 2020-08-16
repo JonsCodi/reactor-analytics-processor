@@ -1,7 +1,7 @@
 package com.analytics.processor.config;
 
 import com.analytics.processor.listener.CustomDirectoryChangeListener;
-import com.analytics.processor.service.IFileChangeService;
+import com.analytics.processor.service.IFileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
@@ -18,11 +18,12 @@ import java.time.Duration;
 public class FileWatcherConfig {
 
     private final HomePathProperties homePathProperties;
-    private final IFileChangeService fileChangeService;
+    private final IFileService fileChangeService;
 
+    //TODO: Testar com mais de 100 arquivos? Teste de integração.
     @Bean
     public FileSystemWatcher fileSystemWatcher() {
-        FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(3000L), Duration.ofMillis(1000L));
+        FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(1000L), Duration.ofMillis(500L));
         fileSystemWatcher.addSourceDirectory(new File(homePathProperties.getHomePathIn()));
         fileSystemWatcher.addListener(new CustomDirectoryChangeListener(fileChangeService));
         fileSystemWatcher.start();
