@@ -5,7 +5,6 @@ plugins {
 }
 
 group = 'com.analytics.processor'
-version = '1.0'
 sourceCompatibility = '11'
 
 configurations {
@@ -38,3 +37,8 @@ jar {
 		attributes 'Main-Class': 'com.analytics.processor.AnalyticProcessorApplication'
 	}
 }
+
+String home = System.getProperty("user.home");
+
+new File(home.concat("/data/in")).mkdirs()
+new File(home.concat("/data/out")).mkdirs()
