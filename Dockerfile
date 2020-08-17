@@ -21,7 +21,6 @@ RUN apk -U add --no-cache curl; \
     apk del curl; \
     apk update && apk add --no-cache libstdc++ && rm -rf /var/cache/apk/*
 
-
 COPY . ./
 RUN gradle clean build
 COPY $ARTIFACT ${APP_HOME}

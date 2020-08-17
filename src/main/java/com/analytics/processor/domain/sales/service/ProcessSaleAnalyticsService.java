@@ -38,6 +38,8 @@ public class ProcessSaleAnalyticsService {
     public void processFiles(Set<ChangedFile> setChangedFile) {
         log.info("Service - Process Files... [Started]");
 
+        String home = System.getProperty("user.home");
+
         List<File> files = fileService.getRecentAddedFiles(setChangedFile);
 
         files.forEach(file -> {
@@ -55,9 +57,10 @@ public class ProcessSaleAnalyticsService {
 
             String result = generateAnalysisService.generateLineAnalyses(clients, sales, salesman);
 
-            log.info("Arquivo: {} | Resultado -> {}", file.getName(), result );
+            log.info("Arquivo: {} | Resultado -> {}", file.getName(), result);
 
-            Path path = Paths.get(pathProperties.getHomePathOut().concat(file.getName()));
+            Path path = Paths.get(
+                    home.concat(pathProperties.getDataOutPath()).concat(file.getName()));
 
             fileService.create(path, result);
         });

@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class HomePathProperties {
 
-    @Value("${service.home-path-in}")
-    private String homePathIn;
+    @Value("${service.data-in}")
+    private String dataInPath;
 
-    @Value("${service.home-path-out}")
-    private String homePathOut;
+    @Value("${service.data-out}")
+    private String dataOutPath;
 
 }

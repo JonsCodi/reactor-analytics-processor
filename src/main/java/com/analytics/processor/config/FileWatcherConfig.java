@@ -8,7 +8,6 @@ import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.time.Duration;
 
@@ -23,8 +22,10 @@ public class FileWatcherConfig {
     //TODO: Testar com mais de 100 arquivos? Teste de integração.
     @Bean
     public FileSystemWatcher fileSystemWatcher() {
-        FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(1000L), Duration.ofMillis(500L));
-        fileSystemWatcher.addSourceDirectory(new File(homePathProperties.getHomePathIn()));
+        String home = System.getProperty("user.home");
+
+        FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(300L), Duration.ofMillis(100L));
+        fileSystemWatcher.addSourceDirectory(new File(home.concat(homePathProperties.getDataInPath())));
         fileSystemWatcher.addListener(new CustomDirectoryChangeListener(processSaleAnalyticsService));
         fileSystemWatcher.start();
 
@@ -33,8 +34,4 @@ public class FileWatcherConfig {
         return fileSystemWatcher;
     }
 
-    @PreDestroy
-    public void onDestroy() {
-        fileSystemWatcher().stop();
-    }
 }
