@@ -24,14 +24,24 @@ public class FileWatcherConfig {
     public FileSystemWatcher fileSystemWatcher() {
         String home = System.getProperty("user.home");
 
+        File dataIn = new File(home.concat(homePathProperties.getDataInPath()));
+        File dataOut = new File(home.concat(homePathProperties.getDataOutPath()));
+
+        createDirectories(dataIn, dataOut);
+
         FileSystemWatcher fileSystemWatcher = new FileSystemWatcher(true, Duration.ofMillis(300L), Duration.ofMillis(100L));
-        fileSystemWatcher.addSourceDirectory(new File(home.concat(homePathProperties.getDataInPath())));
+        fileSystemWatcher.addSourceDirectory(dataIn);
         fileSystemWatcher.addListener(new CustomDirectoryChangeListener(processSaleAnalyticsService));
         fileSystemWatcher.start();
 
         log.info("FileWatcher - Started");
 
         return fileSystemWatcher;
+    }
+
+    private void createDirectories(File dataIn, File dataOut) {
+        dataIn.mkdirs();
+        dataOut.mkdirs();
     }
 
 }
