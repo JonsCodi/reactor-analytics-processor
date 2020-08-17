@@ -40,7 +40,7 @@ public class GenerateAnalysisService {
     private void generateSalesAnalysis(StringBuilder stringBuilder, List<Sale> sales) {
         var salesmanOptional = sales.stream().max(Comparator.comparing(Sale::getTotalSale));
         salesmanOptional.ifPresent(sale ->
-                stringBuilder.append("Most expensive sale: ").append(sale.getId()).append("\r\n")
+                stringBuilder.append("ID of most expensive sale: ").append(sale.getId()).append("\r\n")
         );
 
         Map<String, Float> salesPerSaleman = new HashMap<>();

@@ -23,9 +23,9 @@ public class Sale implements Serializable {
 
     public Float getTotalSale() {
         var total = (float) 0;
-//        for (Item item : items) {
-//            total += item.getTotal();
-//        }
+        for (Item item : items) {
+            total += item.getTotal();
+        }
 
         return total;
     }
