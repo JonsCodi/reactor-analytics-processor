@@ -1,6 +1,7 @@
 package com.analytics.processor.component;
 
 import com.analytics.processor.config.HomePathProperties;
+import com.analytics.processor.service.IFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,19 +15,13 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @RequiredArgsConstructor
 @Component
 public class UploadHandler {
 
-    private final HomePathProperties homePathProperties;
-
-    private final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    private final String DELIMITER_TWO_POINTS = ":";
-    private final String DELIMITER = "-";
+    private final IFileService fileService;
 
     public Mono<ServerResponse> transfer(ServerRequest request) {
         return request.multipartData().flatMap(parts -> {
@@ -49,19 +44,11 @@ public class UploadHandler {
                 part -> {
                     FilePart filePart = (FilePart) part;
 
-                    File newFile = createFile(filePart);
+                    File newFile = fileService.create(filePart);
 
                     filePart.transferTo(newFile);
                 }
         );
-    }
-
-    private File createFile(FilePart filePart) {
-        return new File(homePathProperties.getHomePathIn()
-                .concat(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT))
-                        .replace(DELIMITER_TWO_POINTS, DELIMITER))
-                .concat(DELIMITER)
-                .concat(filePart.filename()));
     }
 
 }

@@ -7,24 +7,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.boot.devtools.filewatch.ChangedFile;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
-
 @Slf4j
 @Lazy
+@RequiredArgsConstructor
 @Service
 public class FileServiceImpl implements IFileService {
+
+    private final HomePathProperties homePathProperties;
 
     @Override
     public List<File> getRecentAddedFiles(Set<ChangedFile> changedFiles) {
@@ -32,7 +34,7 @@ public class FileServiceImpl implements IFileService {
 
         return changedFiles
                 .stream()
-                .filter(file -> file.getType().equals(ChangedFile.Type.ADD))
+                .filter(this::isAddedOrModifyEvent)
                 .map(file -> {
                     log.info("Service - File.name: {}", file.getFile().getName());
 
@@ -41,25 +43,30 @@ public class FileServiceImpl implements IFileService {
                 .collect(Collectors.toList());
     }
 
+    private boolean isAddedOrModifyEvent(ChangedFile file) {
+        return file.getType().equals(ChangedFile.Type.ADD)
+                || file.getType().equals(ChangedFile.Type.MODIFY);
+    }
+
     @Override
-    public void create(String folder, String fileName) {
-        log.info("Service - create | folder: {} | fileName: {}", folder, fileName);
+    public void create(Path path, String content) {
+        log.info("Service - create | Path: {}", path.getFileName());
 
-        File newFile = new File(folder.concat(fileName));
+        try {
+            Files.deleteIfExists(path);
 
-        try (OutputStream out =
-                     new BufferedOutputStream(Files.newOutputStream(newFile.toPath(), CREATE, APPEND))
-        ) {
-            out.write(Files.readAllBytes(newFile.toPath()));
-        } catch (IOException x) { //TODO: Handler...
-            log.error("IOException error: {}", x.getLocalizedMessage());
+            Files.writeString(path, content, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            log.error("Service - create | Error : {}", e.getLocalizedMessage());
 
-            x.printStackTrace();
+            e.printStackTrace();
         }
     }
 
     @Override
-    public String fileToString(File file) {
+    public String fileToStringList(File file) {
         log.info("Service - fileToString | file.name: {}", file.getName());
         try {
             return Files.readString(file.toPath());
@@ -70,6 +77,12 @@ public class FileServiceImpl implements IFileService {
         }
 
         return Strings.EMPTY;
+    }
+
+    @Override
+    public File create(FilePart filePart) {
+        return new File(homePathProperties.getHomePathIn()
+                .concat(filePart.filename()));
     }
 }
 
