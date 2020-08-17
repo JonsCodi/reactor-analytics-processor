@@ -3,7 +3,7 @@ API Reactive about txt processor
 
 Serviço reativo e Watcher de diretório para processamento em lote. 
 
-#How to run
+# How to run
 
 ## Pre-requirements
  - Docker
