@@ -11,7 +11,7 @@ public class Salesman extends Person {
     private String cpf;
     private BigDecimal salary;
 
-    public Salesman(String name, String cpf, BigDecimal salary) {
+    public Salesman(String cpf, String name, BigDecimal salary) {
         super(IDType.SALESMAN, name);
         this.cpf = cpf;
         this.salary = salary;

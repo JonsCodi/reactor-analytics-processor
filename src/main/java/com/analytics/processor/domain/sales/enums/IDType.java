@@ -2,6 +2,8 @@ package com.analytics.processor.domain.sales.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 public enum IDType {
 
     SALESMAN("001"),
@@ -14,4 +16,11 @@ public enum IDType {
     IDType(String id) {
         this.id = id;
     }
+
+    public static IDType getBy(String id) {
+        return Arrays.stream(values())
+                .filter((type) -> type.getId().equals(id)).findAny()
+                .orElse(null);
+    }
+
 }
