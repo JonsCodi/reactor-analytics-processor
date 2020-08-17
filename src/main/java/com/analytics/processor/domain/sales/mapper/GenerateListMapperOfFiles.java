@@ -16,10 +16,12 @@ import java.util.Objects;
 @Service
 public class GenerateListMapperOfFiles {
 
+    //TODO: Refatorar...
     public Map<IDType, List<String>> mapperType(String fileAsString) {
         Map<IDType, List<String>> map = new HashMap<>();
 
-        Iterator<String> iterator = Arrays.asList(fileAsString.split("\r\n")).iterator();
+        Iterator<String> iterator = getIterator(fileAsString);
+
         while (iterator.hasNext()){
             String line = iterator.next();
 
@@ -34,6 +36,18 @@ public class GenerateListMapperOfFiles {
         }
 
         return map;
+    }
+
+    private Iterator<String> getIterator(String fileAsString) {
+        List<String> filesList = Arrays.asList(fileAsString.split("\r\n"));
+        Iterator<String> iterator;
+
+        if(filesList.size()==1){
+            iterator = Arrays.asList(fileAsString.split("\n")).iterator();
+        }else{
+            iterator = filesList.iterator();
+        }
+        return iterator;
     }
 
     private String concatWIthNextLine(Map<IDType, List<String>> map,
