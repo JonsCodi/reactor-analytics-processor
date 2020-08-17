@@ -12,10 +12,11 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 public class UploadRouter {
 
+    //TODO: Adicionar rota GET
     @Bean
     public RouterFunction<ServerResponse> route(UploadHandler uploadHandler) {
         return RouterFunctions
-                .route(RequestPredicates.POST("/upload-files")
+                .route(RequestPredicates.POST("/files")
                                 .and(RequestPredicates.accept(MediaType.MULTIPART_FORM_DATA)),
                         uploadHandler::transfer);
     }
