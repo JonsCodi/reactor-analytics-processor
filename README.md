@@ -20,7 +20,7 @@ $ ./gradlew bootRun
 ```shell
 $ gradle clean build
 $ docker build -t app-img .
-$ docker run -p  ${USER_HOME}/data:/root/data 8080:8080 --name app-run app-img
+$ docker run -v ${USER_HOME}/data:/root/data -p 8080:8080 --name app-run app-img
 ```
 
 ## How to execute manual test
